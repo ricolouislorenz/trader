@@ -2,19 +2,17 @@
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>Westeros Gacha</title>
+    <title>Händlerportal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main>
-      <h1>Westeros Gacha</h1>
+      <h1>Händlerportal</h1>
 
       <!-- Animation oben -->
       <section id="animation-area">
-        <div id="animation-circle" class="animation-circle">
-          <span id="animation-label">Bereit…</span>
-        </div>
+        <div id="animation-circle" class="animation-circle"></div>
       </section>
 
       <!-- Buttons darunter -->
@@ -23,7 +21,7 @@
         <button id="pull10">10× ziehen</button>
       </section>
 
-      <!-- Info + Zähler -->
+      <!-- Info + Pity-Zähler -->
       <section class="info">
         <p id="last-results">Noch keine Ziehung.</p>
         <p id="counters">
@@ -32,23 +30,9 @@
         </p>
       </section>
 
-      <!-- Kleine Kugeln mit Übersicht der letzten Ziehung -->
-      <section class="results-orbs">
-        <div class="result-orb-row">
-          <div class="orb orb-normal"></div>
-          <span class="orb-label">Normal</span>
-          <span class="orb-count" id="count-normal">0</span>
-        </div>
-        <div class="result-orb-row">
-          <div class="orb orb-rare"></div>
-          <span class="orb-label">Selten</span>
-          <span class="orb-count" id="count-rare">0</span>
-        </div>
-        <div class="result-orb-row">
-          <div class="orb orb-legendary"></div>
-          <span class="orb-label">Legendär</span>
-          <span class="orb-count" id="count-legendary">0</span>
-        </div>
+      <!-- Kleine Kugeln: nur bei 10er-Ziehung sichtbar -->
+      <section class="results-orbs" id="results-orbs">
+        <div id="orb-list" class="orb-list"></div>
       </section>
     </main>
 

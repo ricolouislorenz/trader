@@ -7,11 +7,9 @@ const lastResultsEl = document.getElementById("last-results");
 const sinceRLEl = document.getElementById("since-rl");
 const sinceLEl = document.getElementById("since-l");
 const animCircle = document.getElementById("animation-circle");
-const animLabel = document.getElementById("animation-label");
 
-const countNormalEl = document.getElementById("count-normal");
-const countRareEl = document.getElementById("count-rare");
-const countLegendaryEl = document.getElementById("count-legendary");
+const resultsOrbsSection = document.getElementById("results-orbs");
+const orbListEl = document.getElementById("orb-list");
 
 // Buttons verknüpfen
 document.getElementById("pull1").addEventListener("click", () => pull(1));
@@ -42,10 +40,9 @@ function pull(n) {
 
 /**
  * Eine einzelne Ziehung mit:
- * - Basiswahrscheinlichkeiten
- * - Soft-Pity ab 50 Ziehungen ohne Legendary
- * - Hard-Pity: spätestens bei 70 Ziehungen Legendary
+ * - Basiswahrscheinlichkeiten: 85% normal, 12% rare, 3% legendary
  * - Rare-Pity: spätestens alle 10 Ziehungen mindestens Rare
+ * - Legendary-Pity: spätestens alle 70 Ziehungen Legendary
  */
 function drawOne() {
   let result;
@@ -54,35 +51,20 @@ function drawOne() {
   if (pullsSinceLegendary >= 69) {
     result = "legendary";
   } else {
-    const inSoftPity = pullsSinceLegendary >= 50;
     const roll = Math.random();
 
-    if (!inSoftPity) {
-      // Normale Wahrscheinlichkeiten
-      if (roll < 0.8) {
-        result = "normal";
-      } else if (roll < 0.97) {
-        result = "rare";
-      } else {
-        result = "legendary";
-      }
+    // Basiswahrscheinlichkeiten ohne Soft-Pity
+    if (roll < 0.85) {
+      result = "normal";
+    } else if (roll < 0.97) {
+      result = "rare";
     } else {
-      // Soft-Pity: deutlich erhöhte Legendary-Rate
-      const pLegend = 0.33;
-      const pNormal = 0.5526;
-      const pRare = 0.1174;
-
-      if (roll < pNormal) {
-        result = "normal";
-      } else if (roll < pNormal + pRare) {
-        result = "rare";
-      } else {
-        result = "legendary";
-      }
+      result = "legendary";
     }
   }
 
   // 2) Rare-Pity (10er-Garantie)
+  // Wenn schon 9 Ziehungen ohne Rare/Legendary und wieder "normal":
   if (result === "normal") {
     if (pullsSinceRareOrLegendary >= 9) {
       result = "rare"; // Upgrade
@@ -91,6 +73,7 @@ function drawOne() {
       pullsSinceRareOrLegendary++;
     }
   } else {
+    // Rare oder Legendary resetten den Rare/Legendary-Zähler
     pullsSinceRareOrLegendary = 0;
   }
 
@@ -105,7 +88,7 @@ function drawOne() {
 }
 
 /**
- * Textausgabe und Kugel-Counter der Resultate.
+ * Textausgabe und Mini-Orbs (nur bei 10er-Ziehung).
  */
 function showResults(results) {
   const germanNames = {
@@ -114,6 +97,7 @@ function showResults(results) {
     legendary: "Legendär",
   };
 
+  // Text
   if (results.length === 1) {
     lastResultsEl.textContent = `Letzte Ziehung: ${
       germanNames[results[0]]
@@ -123,20 +107,22 @@ function showResults(results) {
     lastResultsEl.textContent = `Letzte ${results.length} Ziehungen: ${list}`;
   }
 
-  // Counts berechnen
-  let normalCount = 0;
-  let rareCount = 0;
-  let legendaryCount = 0;
+  // Mini-Orbs:
+  // - nur anzeigen, wenn es genau 10 Ziehungen waren
+  // - ansonsten Sektion ausblenden
+  orbListEl.innerHTML = "";
 
-  for (const r of results) {
-    if (r === "normal") normalCount++;
-    if (r === "rare") rareCount++;
-    if (r === "legendary") legendaryCount++;
+  if (results.length === 10) {
+    resultsOrbsSection.classList.add("visible");
+
+    results.forEach((r) => {
+      const orb = document.createElement("div");
+      orb.classList.add("mini-orb", r);
+      orbListEl.appendChild(orb);
+    });
+  } else {
+    resultsOrbsSection.classList.remove("visible");
   }
-
-  countNormalEl.textContent = normalCount;
-  countRareEl.textContent = rareCount;
-  countLegendaryEl.textContent = legendaryCount;
 }
 
 /**
@@ -145,4 +131,25 @@ function showResults(results) {
 function updateCountersDisplay() {
   sinceRLEl.textContent = pullsSinceRareOrLegendary;
   sinceLEl.textContent = pullsSinceLegendary;
+}
+
+/**
+ * Spielt die Animation in zwei Phasen:
+ * 1) neutraler "Ungewiss"-Look
+ * 2) nach kurzer Verzögerung Farb-Reveal (blau/lila/Regenbogen)
+ */
+function playAnimationForRarity(rarity) {
+  // 1) Neutraler Start: unbekannt
+  animCircle.className = "animation-circle";
+  void animCircle.offsetWidth; // Reflow-Trick
+
+  animCircle.classList.add("unknown", "show");
+
+  // 2) Farb-Reveal nach kurzer Verzögerung
+  setTimeout(() => {
+    animCircle.className = "animation-circle";
+    void animCircle.offsetWidth;
+
+    animCircle.classList.add(rarity, "show");
+  }, 700);
 }
