@@ -59,7 +59,7 @@ h1 {
   overflow: hidden;
 }
 
-/* Grundanimation */
+/* Grundanimation: Kugel „erscheint“ */
 .animation-circle.show {
   animation: summon 0.9s ease-out forwards;
 }
@@ -72,7 +72,7 @@ h1 {
   box-shadow: 0 0 25px rgba(31, 41, 55, 0.9);
 }
 
-/* NORMAL (blau) – eher helles, klares Blau */
+/* NORMAL (blau) – klarer, heller Blauton */
 .animation-circle.normal {
   background:
     radial-gradient(circle at 30% 0%, #e0f2fe, #2563eb 50%, #020617),
@@ -81,7 +81,7 @@ h1 {
     0 0 80px rgba(15, 23, 42, 0.9);
 }
 
-/* RARE (lila) – deutlich Richtung Magenta/Violett */
+/* RARE (lila/magenta) – deutlich unterscheidbar */
 .animation-circle.rare {
   background:
     radial-gradient(circle at 30% 0%, #fce7f3, #db2777 50%, #020617),
@@ -107,7 +107,9 @@ h1 {
     0 0 120px rgba(234, 179, 8, 0.9);
 }
 
-/* Partikel / "Schwert-/Blitz"-Slashes */
+/* ========================= */
+/*   SCHWERT & PARTIKEL     */
+/* ========================= */
 
 .animation-circle::before,
 .animation-circle::after {
@@ -117,37 +119,82 @@ h1 {
   pointer-events: none;
 }
 
-/* zwei kreuzende "Klingen"/Blitze */
+/* GEOMETRIE: erster Slash */
 .animation-circle.show::before {
-  width: 180%;
-  height: 3px;
+  width: 220%;
+  height: 4px;
   top: 50%;
-  left: -40%;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(248, 250, 252, 0.9),
-    transparent
-  );
+  left: -60%;
   transform-origin: center;
-  transform: translateY(-50%) scaleX(0.3) rotate(-30deg);
-  animation: swordSlash1 0.55s ease-out forwards;
+  transform: translateY(-50%) scaleX(0.1) rotate(-40deg);
+  animation: swordSlash1 0.45s ease-out forwards;
 }
 
+/* GEOMETRIE: zweiter Slash – verzögerter Schlag */
 .animation-circle.show::after {
-  width: 180%;
-  height: 3px;
+  width: 220%;
+  height: 4px;
   top: 50%;
-  left: -40%;
+  left: -60%;
+  transform-origin: center;
+  transform: translateY(-50%) scaleX(0.1) rotate(38deg);
+  animation: swordSlash2 0.45s ease-out 0.18s forwards; /* Delay */
+}
+
+/* FARBE & PARTIKEL pro Rarität – erster Slash (mit farbigen Funken) */
+
+.animation-circle.normal.show::before {
+  background:
+    /* Klinge / Blitz */
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(248, 250, 252, 0.95),
+      transparent
+    ),
+    /* Partikel in Blau */
+    radial-gradient(circle at 15% 30%, rgba(96, 165, 250, 0.8), transparent 55%),
+    radial-gradient(circle at 70% 70%, rgba(59, 130, 246, 0.6), transparent 55%);
+}
+
+.animation-circle.rare.show::before {
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(248, 250, 252, 0.95),
+      transparent
+    ),
+    radial-gradient(circle at 15% 30%, rgba(244, 114, 182, 0.9), transparent 55%),
+    radial-gradient(circle at 70% 70%, rgba(219, 39, 119, 0.7), transparent 55%);
+}
+
+.animation-circle.legendary.show::before {
+  background:
+    linear-gradient(
+      to right,
+      transparent,
+      rgba(248, 250, 252, 0.95),
+      transparent
+    ),
+    radial-gradient(circle at 15% 30%, rgba(250, 204, 21, 0.9), transparent 55%),
+    radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.85), transparent 55%);
+}
+
+/* zweiter Slash: reine helle „Klinge“ */
+.animation-circle.show::after {
   background: linear-gradient(
     to right,
     transparent,
-    rgba(248, 250, 252, 0.9),
+    rgba(248, 250, 252, 0.95),
     transparent
   );
-  transform-origin: center;
-  transform: translateY(-50%) scaleX(0.3) rotate(35deg);
-  animation: swordSlash2 0.55s ease-out forwards;
+}
+
+/* Legendäre „Blitze“: kleines zusätzliches Flackern über der Kugel */
+.animation-circle.legendary.show {
+  animation: summon 0.9s ease-out forwards,
+    legendaryFlash 0.35s ease-out 0.35s;
 }
 
 /* Buttons */
@@ -256,11 +303,11 @@ button:active {
   }
   40% {
     opacity: 1;
-    transform: scale(1.05) rotate(5deg);
+    transform: scale(1.08) rotate(6deg);
     filter: blur(0);
   }
   70% {
-    transform: scale(0.95) rotate(-2deg);
+    transform: scale(0.96) rotate(-2deg);
   }
   100% {
     opacity: 1;
@@ -269,33 +316,59 @@ button:active {
   }
 }
 
+/* Erster Schlag: schneller, kräftiger Schnitt */
 @keyframes swordSlash1 {
   0% {
-    opacity: 0.0;
-    transform: translateY(-50%) scaleX(0.2) rotate(-30deg);
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0.1) rotate(-40deg);
   }
-  40% {
+  25% {
     opacity: 1;
-    transform: translateY(-50%) scaleX(1) rotate(-25deg);
+    transform: translateY(-50%) scaleX(1.05) rotate(-32deg);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateY(-50%) scaleX(1.25) rotate(-26deg);
   }
   100% {
     opacity: 0;
-    transform: translateY(-50%) scaleX(1.4) rotate(-20deg);
+    transform: translateY(-50%) scaleX(1.5) rotate(-20deg);
   }
 }
 
+/* Zweiter Schlag: etwas später, von der anderen Seite */
 @keyframes swordSlash2 {
   0% {
-    opacity: 0.0;
-    transform: translateY(-50%) scaleX(0.2) rotate(35deg);
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0.1) rotate(38deg);
   }
-  40% {
+  25% {
     opacity: 1;
-    transform: translateY(-50%) scaleX(1) rotate(30deg);
+    transform: translateY(-50%) scaleX(1.05) rotate(30deg);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateY(-50%) scaleX(1.25) rotate(24deg);
   }
   100% {
     opacity: 0;
-    transform: translateY(-50%) scaleX(1.4) rotate(25deg);
+    transform: translateY(-50%) scaleX(1.5) rotate(18deg);
+  }
+}
+
+/* Legendäres „Blitz“-Flackern über der Kugel */
+@keyframes legendaryFlash {
+  0% {
+    box-shadow: 0 0 40px rgba(252, 211, 77, 0.95),
+      0 0 120px rgba(234, 179, 8, 0.9);
+  }
+  40% {
+    box-shadow: 0 0 70px rgba(252, 211, 77, 1),
+      0 0 170px rgba(250, 250, 210, 0.95);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(252, 211, 77, 0.95),
+      0 0 120px rgba(234, 179, 8, 0.9);
   }
 }
 
