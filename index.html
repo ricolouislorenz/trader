@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Westeros Gacha</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Westeros Gacha</h1>
+
+      <section class="controls">
+        <button id="pull1">1× ziehen</button>
+        <button id="pull10">10× ziehen</button>
+      </section>
+
+      <section class="info">
+        <p id="last-results">Noch keine Ziehung.</p>
+        <p id="counters">
+          Seit letztem Rare/Legendary: <span id="since-rl">0</span> ·
+          Seit letztem Legendary: <span id="since-l">0</span>
+        </p>
+      </section>
+
+      <section id="animation-area">
+        <div id="animation-circle" class="animation-circle">
+          <span id="animation-label">Bereit…</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
