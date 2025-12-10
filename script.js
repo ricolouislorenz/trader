@@ -11,6 +11,8 @@ const animCircle = document.getElementById("animation-circle");
 const resultsOrbsSection = document.getElementById("results-orbs");
 const orbListEl = document.getElementById("orb-list");
 
+const pullSound = document.getElementById("pull-sound");
+
 // Event-Handler für die Buttons
 document.getElementById("pull1").addEventListener("click", () => pull(1));
 document.getElementById("pull10").addEventListener("click", () => pull(10));
