@@ -10,11 +10,20 @@
     <main>
       <h1>Westeros Gacha</h1>
 
+      <!-- Animation oben -->
+      <section id="animation-area">
+        <div id="animation-circle" class="animation-circle">
+          <span id="animation-label">Bereit…</span>
+        </div>
+      </section>
+
+      <!-- Buttons darunter -->
       <section class="controls">
         <button id="pull1">1× ziehen</button>
         <button id="pull10">10× ziehen</button>
       </section>
 
+      <!-- Info + Zähler -->
       <section class="info">
         <p id="last-results">Noch keine Ziehung.</p>
         <p id="counters">
@@ -23,9 +32,22 @@
         </p>
       </section>
 
-      <section id="animation-area">
-        <div id="animation-circle" class="animation-circle">
-          <span id="animation-label">Bereit…</span>
+      <!-- Kleine Kugeln mit Übersicht der letzten Ziehung -->
+      <section class="results-orbs">
+        <div class="result-orb-row">
+          <div class="orb orb-normal"></div>
+          <span class="orb-label">Normal</span>
+          <span class="orb-count" id="count-normal">0</span>
+        </div>
+        <div class="result-orb-row">
+          <div class="orb orb-rare"></div>
+          <span class="orb-label">Selten</span>
+          <span class="orb-count" id="count-rare">0</span>
+        </div>
+        <div class="result-orb-row">
+          <div class="orb orb-legendary"></div>
+          <span class="orb-label">Legendär</span>
+          <span class="orb-count" id="count-legendary">0</span>
         </div>
       </section>
     </main>

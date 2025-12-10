@@ -7,85 +7,54 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  background: radial-gradient(circle at top, #020617, #000000 70%);
+  background:
+    radial-gradient(circle at top, #020617, #000000 70%),
+    url("https://images.pexels.com/photos/220182/pexels-photo-220182.jpeg")
+      center/cover fixed; /* optionaler Hintergrund - kannst du ersetzen/entfernen */
   color: #e5e7eb;
   min-height: 100vh;
 }
 
 main {
-  max-width: 480px;
+  max-width: 600px; /* etwas breiter für iPad */
   margin: 0 auto;
   padding: 1.5rem;
   text-align: center;
 }
 
 h1 {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   margin-bottom: 1rem;
-}
-
-/* Buttons */
-
-.controls {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-button {
-  flex: 1;
-  padding: 0.75rem 1rem;
-  border-radius: 999px;
-  border: none;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  background: linear-gradient(135deg, #1d4ed8, #38bdf8);
-  color: white;
-  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.5);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.7);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.6);
-}
-
-.info {
-  font-size: 0.9rem;
-  color: #cbd5f5;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #e5e7eb;
+  text-shadow: 0 0 10px #000000;
 }
 
 /* Animationsbereich */
 
 #animation-area {
-  margin-top: 1.5rem;
+  margin-top: 0.5rem;
   display: flex;
   justify-content: center;
 }
 
 .animation-circle {
-  width: min(260px, 70vw);
-  height: min(260px, 70vw);
+  width: min(320px, 70vw);
+  height: min(320px, 70vw);
   border-radius: 999px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* Grundzustand: fast unsichtbar, leicht verkleinert */
   opacity: 0;
   transform: scale(0.6);
   filter: blur(2px);
 
-  /* dezenter Rand für "inaktiv" */
-  border: 2px solid rgba(148, 163, 184, 0.4);
+  border: 2px solid rgba(148, 163, 184, 0.25);
+  overflow: hidden;
 }
 
 /* Label in der Mitte */
@@ -93,36 +62,45 @@ button:active {
 #animation-label {
   font-size: 1.1rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   text-shadow: 0 0 8px rgba(15, 23, 42, 0.9);
+  z-index: 10;
 }
 
-/* Grundanimation, gleich für alle Rarities */
-
+/* Grundanimation */
 .animation-circle.show {
   animation: summon 0.9s ease-out forwards;
 }
 
-/* Farbvarianten */
+/* Unbekannt-Zustand (vor Farb-Reveal) */
+.animation-circle.unknown {
+  background:
+    radial-gradient(circle at 50% 50%, #020617 0%, #020617 55%, transparent 60%),
+    conic-gradient(from 0deg, #0f172a, #020617, #020617, #0f172a);
+  box-shadow: 0 0 25px rgba(31, 41, 55, 0.9);
+}
 
 /* NORMAL (blau) */
 .animation-circle.normal {
-  background: radial-gradient(circle at 30% 0%, #dbeafe, #1d4ed8 50%, #020617);
+  background:
+    radial-gradient(circle at 30% 0%, #dbeafe, #1d4ed8 50%, #020617),
+    radial-gradient(circle at 80% 90%, rgba(59, 130, 246, 0.4), transparent);
   box-shadow: 0 0 25px rgba(59, 130, 246, 0.8),
     0 0 80px rgba(15, 23, 42, 0.9);
 }
 
 /* RARE (lila) */
 .animation-circle.rare {
-  background: radial-gradient(circle at 30% 0%, #f5d0fe, #7e22ce 50%, #020617);
+  background:
+    radial-gradient(circle at 30% 0%, #f5d0fe, #7e22ce 50%, #020617),
+    radial-gradient(circle at 80% 90%, rgba(168, 85, 247, 0.5), transparent);
   box-shadow: 0 0 30px rgba(168, 85, 247, 0.9),
     0 0 90px rgba(30, 64, 175, 0.9);
 }
 
 /* LEGENDARY (Regenbogen) */
 .animation-circle.legendary {
-  /* Regenbogen-Effekt + dunkler Kern */
   background:
     radial-gradient(circle at 50% 50%, #0b1120 0%, #020617 55%, transparent 60%),
     conic-gradient(
@@ -138,27 +116,224 @@ button:active {
     0 0 120px rgba(234, 179, 8, 0.9);
 }
 
-/* Keyframes: gleiche Bewegung für alle, nur Farben variieren */
+/* Partikel / Glühen über Pseudo-Elemente */
+
+.animation-circle::before,
+.animation-circle::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* leichte Funken-Orbit */
+.animation-circle.show::before {
+  opacity: 0.8;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(255, 255, 255, 0.25),
+      transparent
+    ),
+    radial-gradient(circle at 30% 80%, rgba(255, 255, 255, 0.2), transparent);
+  animation: particleOrbit 1.1s ease-out forwards;
+}
+
+/* zusätzlicher Farbschimmer abhängig von Rarity */
+.animation-circle.normal.show::after {
+  opacity: 0.7;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.5), transparent);
+  animation: particleBurst 0.9s ease-out forwards;
+}
+
+.animation-circle.rare.show::after {
+  opacity: 0.7;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.6), transparent);
+  animation: particleBurst 0.9s ease-out forwards;
+}
+
+.animation-circle.legendary.show::after {
+  opacity: 0.9;
+  background:
+    radial-gradient(circle, rgba(250, 204, 21, 0.8), transparent),
+    conic-gradient(
+      from 0deg,
+      rgba(249, 115, 22, 0.7),
+      rgba(250, 204, 21, 0.8),
+      rgba(34, 197, 94, 0.7),
+      rgba(56, 189, 248, 0.7),
+      rgba(168, 85, 247, 0.8),
+      rgba(249, 115, 22, 0.7)
+    );
+  animation: particleBurst 1s ease-out forwards;
+}
+
+/* Buttons */
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin: 1.3rem 0 0.8rem;
+}
+
+button {
+  flex: 1;
+  padding: 0.9rem 1rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: linear-gradient(135deg, #1f2937, #4b5563);
+  color: #f9fafb;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.7);
+  transition: transform 0.1s ease, box-shadow 0.1s ease,
+    background 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.9);
+  background: linear-gradient(135deg, #4b5563, #9ca3af);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.7);
+}
+
+/* Info */
+
+.info {
+  font-size: 0.9rem;
+  color: #cbd5f5;
+}
+
+/* Ergebnis-Kugeln */
+
+.results-orbs {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.7);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+.result-orb-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.2rem 0;
+}
+
+.orb {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+.orb-normal {
+  background: radial-gradient(circle at 30% 20%, #e0f2fe, #1d4ed8);
+}
+
+.orb-rare {
+  background: radial-gradient(circle at 30% 20%, #f5d0fe, #7e22ce);
+}
+
+.orb-legendary {
+  background:
+    radial-gradient(circle at 30% 20%, #fef3c7, #f97316),
+    conic-gradient(
+      from 0deg,
+      #f97316,
+      #facc15,
+      #22c55e,
+      #0ea5e9,
+      #a855f7,
+      #f97316
+    );
+}
+
+.orb-label {
+  flex: 1;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.orb-count {
+  min-width: 2.2rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Keyframes */
+
 @keyframes summon {
   0% {
     opacity: 0;
     transform: scale(0.4) rotate(-8deg);
     filter: blur(8px);
   }
-
   40% {
     opacity: 1;
     transform: scale(1.05) rotate(5deg);
     filter: blur(0);
   }
-
   70% {
     transform: scale(0.95) rotate(-2deg);
   }
-
   100% {
     opacity: 1;
     transform: scale(1) rotate(0deg);
     filter: blur(0);
+  }
+}
+
+@keyframes particleOrbit {
+  0% {
+    transform: rotate(0deg) scale(0.9);
+    opacity: 0.8;
+  }
+  70% {
+    transform: rotate(15deg) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(25deg) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes particleBurst {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+/* kleine Optimierungen für breitere Devices wie iPad */
+@media (min-width: 820px) {
+  main {
+    padding-top: 2.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
   }
 }

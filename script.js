@@ -9,6 +9,10 @@ const sinceLEl = document.getElementById("since-l");
 const animCircle = document.getElementById("animation-circle");
 const animLabel = document.getElementById("animation-label");
 
+const countNormalEl = document.getElementById("count-normal");
+const countRareEl = document.getElementById("count-rare");
+const countLegendaryEl = document.getElementById("count-legendary");
+
 // Buttons verknüpfen
 document.getElementById("pull1").addEventListener("click", () => pull(1));
 document.getElementById("pull10").addEventListener("click", () => pull(10));
@@ -64,10 +68,9 @@ function drawOne() {
       }
     } else {
       // Soft-Pity: deutlich erhöhte Legendary-Rate
-      // Beispiel: Legendary 33 %, der Rest proportional verteilt
       const pLegend = 0.33;
-      const pNormal = 0.5526; // ca. 55,26 %
-      const pRare = 0.1174; // ca. 11,74 %
+      const pNormal = 0.5526;
+      const pRare = 0.1174;
 
       if (roll < pNormal) {
         result = "normal";
@@ -79,9 +82,7 @@ function drawOne() {
     }
   }
 
-  // 2) Rare-Pity (10er-Garantie):
-  // Wenn wir schon 9 Ziehungen ohne Rare/Legendary hatten und
-  // jetzt wieder ein "normal" hätten -> upgrade auf "rare".
+  // 2) Rare-Pity (10er-Garantie)
   if (result === "normal") {
     if (pullsSinceRareOrLegendary >= 9) {
       result = "rare"; // Upgrade
@@ -90,7 +91,6 @@ function drawOne() {
       pullsSinceRareOrLegendary++;
     }
   } else {
-    // Rare oder Legendary resetten den Rare/Legendary-Zähler
     pullsSinceRareOrLegendary = 0;
   }
 
@@ -105,7 +105,7 @@ function drawOne() {
 }
 
 /**
- * Textausgabe der Resultate.
+ * Textausgabe und Kugel-Counter der Resultate.
  */
 function showResults(results) {
   const germanNames = {
@@ -115,11 +115,28 @@ function showResults(results) {
   };
 
   if (results.length === 1) {
-    lastResultsEl.textContent = `Letzte Ziehung: ${germanNames[results[0]]}`;
+    lastResultsEl.textContent = `Letzte Ziehung: ${
+      germanNames[results[0]]
+    }`;
   } else {
     const list = results.map((r) => germanNames[r]).join(", ");
     lastResultsEl.textContent = `Letzte ${results.length} Ziehungen: ${list}`;
   }
+
+  // Counts berechnen
+  let normalCount = 0;
+  let rareCount = 0;
+  let legendaryCount = 0;
+
+  for (const r of results) {
+    if (r === "normal") normalCount++;
+    if (r === "rare") rareCount++;
+    if (r === "legendary") legendaryCount++;
+  }
+
+  countNormalEl.textContent = normalCount;
+  countRareEl.textContent = rareCount;
+  countLegendaryEl.textContent = legendaryCount;
 }
 
 /**
@@ -128,29 +145,4 @@ function showResults(results) {
 function updateCountersDisplay() {
   sinceRLEl.textContent = pullsSinceRareOrLegendary;
   sinceLEl.textContent = pullsSinceLegendary;
-}
-
-/**
- * Spielt die passende Animation (blau / lila / Regenbogen)
- * für die höchste Seltenheit der letzten Ziehung(en).
- */
-function playAnimationForRarity(rarity) {
-  const labels = {
-    normal: "Normal",
-    rare: "Selten",
-    legendary: "Legendär!",
-  };
-
-  animLabel.textContent = labels[rarity];
-
-  // Klassen zurücksetzen
-  animCircle.className = "animation-circle";
-
-  // Force Reflow, damit die Animation jedes Mal neu startet
-  // (kleiner Trick)
-  void animCircle.offsetWidth;
-
-  // Farbkategorie + Show-Animation setzen
-  animCircle.classList.add(rarity);
-  animCircle.classList.add("show");
 }
