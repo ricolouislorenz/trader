@@ -1,8 +1,8 @@
-// Zähler für Pity
+// Pity-Zähler
 let pullsSinceRareOrLegendary = 0;
 let pullsSinceLegendary = 0;
 
-// Referenzen auf DOM-Elemente
+// DOM-Elemente
 const lastResultsEl = document.getElementById("last-results");
 const sinceRLEl = document.getElementById("since-rl");
 const sinceLEl = document.getElementById("since-l");
@@ -11,7 +11,7 @@ const animCircle = document.getElementById("animation-circle");
 const resultsOrbsSection = document.getElementById("results-orbs");
 const orbListEl = document.getElementById("orb-list");
 
-// Buttons verknüpfen
+// Event-Handler für die Buttons
 document.getElementById("pull1").addEventListener("click", () => pull(1));
 document.getElementById("pull10").addEventListener("click", () => pull(10));
 
