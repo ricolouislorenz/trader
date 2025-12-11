@@ -11,11 +11,33 @@ const animCircle = document.getElementById("animation-circle");
 const resultsOrbsSection = document.getElementById("results-orbs");
 const orbListEl = document.getElementById("orb-list");
 
+// Sound
 const pullSound = document.getElementById("pull-sound");
+if (pullSound) {
+  pullSound.volume = 0.6; // etwas abgedämpft
+}
+
+// Sound-Helfer
+function playPullSound() {
+  if (!pullSound) return;
+  try {
+    pullSound.currentTime = 0; // von vorne starten
+    pullSound.play();
+  } catch (e) {
+    console.warn("Sound konnte nicht abgespielt werden:", e);
+  }
+}
 
 // Event-Handler für die Buttons
-document.getElementById("pull1").addEventListener("click", () => pull(1));
-document.getElementById("pull10").addEventListener("click", () => pull(10));
+document.getElementById("pull1").addEventListener("click", () => {
+  playPullSound();
+  pull(1);
+});
+
+document.getElementById("pull10").addEventListener("click", () => {
+  playPullSound();
+  pull(10);
+});
 
 /**
  * Führt n Ziehungen aus und aktualisiert Anzeige & Animation.
