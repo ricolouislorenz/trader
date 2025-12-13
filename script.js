@@ -1,11 +1,9 @@
-// Pity-Zähler
+// Pity-Zähler (werden intern für die Logik genutzt, aber nicht angezeigt)
 let pullsSinceRareOrLegendary = 0;
 let pullsSinceLegendary = 0;
 
 // DOM-Elemente
 const lastResultsEl = document.getElementById("last-results");
-const sinceRLEl = document.getElementById("since-rl");
-const sinceLEl = document.getElementById("since-l");
 const animCircle = document.getElementById("animation-circle");
 
 const resultsOrbsSection = document.getElementById("results-orbs");
@@ -59,7 +57,6 @@ function pull(n) {
 
   showResults(results);
   playAnimationForRarity(highest);
-  updateCountersDisplay();
 }
 
 /**
@@ -147,14 +144,6 @@ function showResults(results) {
   } else {
     resultsOrbsSection.classList.remove("visible");
   }
-}
-
-/**
- * Aktualisiert die Anzeige der Zähler unter dem Text.
- */
-function updateCountersDisplay() {
-  sinceRLEl.textContent = pullsSinceRareOrLegendary;
-  sinceLEl.textContent = pullsSinceLegendary;
 }
 
 /**
